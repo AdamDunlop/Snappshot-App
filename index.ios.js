@@ -15,56 +15,89 @@ import React, {
   CameraRoll
 } from 'react-native';
 
-
+var ImagePickerManager = require('NativeModules').ImagePickerManager;
 
 class Snappshot extends Component {
 
-constructor(){
-  super();
-  this.state ={
-    imageSource = ''
-  };
-}
+    constructor() {
+        super();
 
-_showImagePicker() {
-  ImagePickerManager.showImagePicker(options, (response) => {
-    console.log('Response = ', response);
+        this.state = {
+            imageSource: '',
+            text: ''
+        };
+    }
 
-    if (response.didCancel) {
-      console.log('User cancelled image picker');
-    }
-    else if (response.error) {
-      console.log('ImagePickerManager Error: ', response.error);
-    }
-    else if (response.customButton) {
-      console.log('User tapped custom button: ', response.customButton);
-    }
-    else {    
-      CameraRoll.saveImageWithTag(response.uri.replace('file://', ''))
-      .then)(newUri => {
-        console.log('saved');
-        this.setState({
-         imageSource: {uri: newUri}
-        
+    componentDidMount() {}
+
+    _showImagePicker() {
+        ImagePickerManager.showImagePicker(options, (response) => {
+            console.log('Response = ', response);
+
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            }
+            else if (response.error) {
+                console.log('ImagePickerManager Error: ', response.error);
+            }
+            else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            }
+            else {
+                CameraRoll.saveImageWithTag(response.uri)
+                    .then(newUri => {
+                        this.setState({
+                            imageSource: {uri: newUri.replace('file://', '')}
+                        });
+                    })
+                    .then(() => {
+                        let request = {
+                            "requests":[{
+                                "image":{
+                                    "content": response.data
+                                },
+                                "features":[{
+                                    "type":"TEXT_DETECTION",
+                                    "maxResults":1
+                                }]
+                            }]
+                        };
+                        return fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAJ1Y0f-8pNPyM2fBth5vLLTtBJCDtNHbw', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(request)
+                        })
+                        .then(res => {
+                            return res.json();
+                        })
+                        .then(json => {
+                            console.log('RESPONSE IS: ', json);
+                            this.setState({
+                                text: json.responses[0].textAnnotations[0].description
+                            });
+                        });
+                    })
+                    .catch(err => console.log(err));
+                // API calls
+            }
         });
-      })
-      .catch(err => console.log(err))
     }
-  });
 
-}
-
-  render() {
-    return (
-      <View style={styles.container}>
-          {this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
-          <TouchableOpacity onPress={this._showImagePicker.bind(this)}>
-            <Text>
-              {'Click Me'}
-            </Text>
-          </TouchableOpacity>
-      </View>
-    );
+    render() {
+        return (
+            <View style={styles.container}>
+                {this.state.imageSource ? 
+                    <Image style={styles.image} source={this.state.imageSource} /> : null}
+                <TouchableOpacity onPress={this._showImagePicker.bind(this)}>
+                    <Text>{'Take Picture'}</Text>
+                </TouchableOpacity>
+                <Text>{'Text read:'}</Text>
+                <Text>{this.state.text}</Text>
+            </View>
+        );
   }
 }
 
@@ -75,20 +108,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
   image: {
-    width: 100,
-    height: 100
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    width: 200,
+    height: 200,
+    resizeMode: 'cover'
+  }
 });
 
 var options = {
