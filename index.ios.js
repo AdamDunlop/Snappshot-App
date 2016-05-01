@@ -14,6 +14,8 @@ import React, {
   TouchableOpacity,
   CameraRoll
 } from 'react-native';
+import immutable from 'immutable';
+import { createStore } from 'redux';
 
 var ImagePickerManager = require('NativeModules').ImagePickerManager;
 
