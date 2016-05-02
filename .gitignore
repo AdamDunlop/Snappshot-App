@@ -29,6 +29,7 @@ npm-debug.log
  
 # IntelliJ
 .idea/
+android/.idea
 *.iml
 *.iws
 *.ipr
