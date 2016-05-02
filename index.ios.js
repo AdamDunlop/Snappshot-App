@@ -13,6 +13,8 @@ let unsubscribe = Store.subscribe(() =>
   console.log('App store state: ', Store.getState())
 );
 
+console.log('app state before action STARTED', Store.getState());
 Store.dispatch(startApp());
 
+console.log('app state after action STARTED', Store.getState());
 AppRegistry.registerComponent('Snappshot', () => Root);
