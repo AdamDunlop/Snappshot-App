@@ -13,10 +13,10 @@ import React, {
 
 class Snappshot extends Component {
   render() {
-    return (
+    return (  
       <View style={styles.container}>
         <Text style={styles.welcome}>
-          Welcome to React Native!
+          Snappshot Edit
         </Text>
         <Text style={styles.instructions}>
           To get started, edit index.android.js
