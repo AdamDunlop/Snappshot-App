@@ -1,23 +1,14 @@
 {
-    "name": "Snappshot",
-    "version": "0.0.1",
-    "private": true,
-    "scripts": {
-        "start": "node node_modules/react-native/local-cli/cli.js start",
-        "test": "mocha --compilers js:babel-register --recursive",
-        "test:watch": "npm test -- --watch"
-    },
-    "dependencies": {
-        "immutable": "^3.8.1",
-        "react": "^0.14.8",
-        "react-native": "^0.24.1",
-        "react-native-image-picker": "^0.18.15",
-        "react-redux": "^4.4.5",
-        "redux": "^3.5.2"
-    },
-    "devDependencies": {
-        "babel-register": "^6.7.2",
-        "mocha": "^2.4.5",
-        "redux-devtools": "^3.2.0"
-    }
+  "name": "snappshot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/api.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
 }
