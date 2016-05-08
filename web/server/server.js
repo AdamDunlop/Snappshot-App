@@ -7,8 +7,8 @@ var MongoClient = require('mongodb').MongoClient;
 var app = express();
 var isProduction = process.env.NODE_ENV === 'production';
 var port = isProduction ? process.env.PORT : 3000;
-var publicPath = path.resolve(__dirname, 'public');
-var authRouter = require('./src/routers/auth.js');
+var publicPath = path.resolve(__dirname, '..', 'public');
+var authRouter = require('./routers/auth.js');
 var reqInfoLogger = function (req, res, next) {
    console.log(req.method, req.url);
   next();

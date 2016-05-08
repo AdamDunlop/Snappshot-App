@@ -1,8 +1,8 @@
 var Webpack = require('webpack');
 var path = require('path');
 var nodeModulesPath = path.resolve(__dirname, 'node_modules');
-var buildPath = path.resolve(__dirname, 'app/public', 'build');
-var mainPath = path.resolve(__dirname, 'app/src', 'main.js');
+var buildPath = path.resolve(__dirname, 'web/public', 'build');
+var mainPath = path.resolve(__dirname, 'web/src', 'main.js');
 
 var config = {
     devtool: 'inline-source-map',
@@ -16,7 +16,7 @@ var config = {
     module: {
         loaders: [
             {
-                test: path.resolve(__dirname, 'app', 'src'),
+                test: path.resolve(__dirname, 'web', 'src'),
                 loader: 'babel',
                 exclude: [nodeModulesPath],
                 query: {
