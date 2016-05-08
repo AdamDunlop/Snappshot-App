@@ -7,8 +7,7 @@ module.exports = function (cb) {
   // created
   var compiler = Webpack(webpackConfig);
 
-  // We give notice in the terminal when it starts bundling and
-  // set the time it started
+  // We give starts in the terminal when it finished bundling 
   compiler.run(function(err, stats) {
     console.log( stats.toString({ colors: true }) );
     console.log( 'Bundling has finished.');
