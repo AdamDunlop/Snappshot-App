@@ -1,6 +1,7 @@
 node_modules
 npm-debug.log
- 
+/app/public/build
+
 # IntelliJ
 .idea/
 android/.idea
@@ -22,5 +23,3 @@ android/.idea
  
 # Windows
 Thumbs.db
-
-/app/public/build
