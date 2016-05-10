@@ -2,9 +2,12 @@ node_modules
 npm-debug.log
 /web/public/build
 
+# Xcode
+build/
+
 # IntelliJ
 .idea/
-android/.idea
+mobile/android/.idea
 *.iml
 *.iws
 *.ipr
