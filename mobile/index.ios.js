@@ -18,3 +18,4 @@ Store.dispatch(startApp());
 
 console.log('app state after action STARTED', Store.getState());
 AppRegistry.registerComponent('Snappshot', () => Root);
+
