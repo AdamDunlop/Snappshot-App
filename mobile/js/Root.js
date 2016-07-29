@@ -5,6 +5,7 @@ import React, {
   Text,
   View,
   Image,
+  RefreshControl,
   TouchableOpacity,
   CameraRoll
 } from 'react-native';
@@ -24,10 +25,14 @@ class Root extends Component {
         };
     }
 
-    componentDidMount() {}
+  _onRefresh() {
+    this.setState({refreshing: true});
+    fetchData().then(() => {
+      this.setState({refreshing: false});
+    });
+  }
 
-    _deleteImage() {
-    }
+    componentDidMount() {}
 
     _showImagePicker() {
         ImagePickerManager.showImagePicker(options, (response) => {
@@ -102,6 +107,12 @@ class Root extends Component {
                 <Text>{this.state.text}</Text>
 
                 <Button
+                refreshControl={
+                    <RefreshControl
+                      refreshing={this.state.refreshing}
+                      onRefresh={this._onRefresh.bind(this)}
+                    />
+                  }
                   style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
                   onPress={this._deleteImage()}>
                   Refresh
