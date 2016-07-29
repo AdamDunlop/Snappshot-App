@@ -9,6 +9,8 @@ import React, {
   CameraRoll
 } from 'react-native';
 
+var Button = require('react-native-button');
+
 let ImagePickerManager = require('NativeModules').ImagePickerManager;
 
 class Root extends Component {
@@ -23,6 +25,9 @@ class Root extends Component {
     }
 
     componentDidMount() {}
+
+    _deleteImage() {
+    }
 
     _showImagePicker() {
         ImagePickerManager.showImagePicker(options, (response) => {
@@ -82,18 +87,32 @@ class Root extends Component {
 
     render() {
         return (
+
             <View style={styles.container}>
-                {this.state.imageSource ? 
-                    <Image style={styles.image} source={this.state.imageSource} /> : null}
-                <TouchableOpacity onPress={this._showImagePicker.bind(this)}>
-                    <Text>{'Take Picture'}</Text>
-                </TouchableOpacity>
+              <Text>Hello!</Text>
+                <Text style={styles.header}>Welcome To SnappShot</Text>
+                {this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
+                  <Button
+                  style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
+                  onPress={this._showImagePicker.bind(this)}>
+                  Take a Snapp
+                </Button>
+
                 <Text>{'Text read:'}</Text>
                 <Text>{this.state.text}</Text>
+
+                <Button
+                  style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
+                  onPress={this._deleteImage()}>
+                  Refresh
+                </Button>
             </View>
-        );
+        );      
   }
 }
+
+
+
 
 export default Root;
 
@@ -103,11 +122,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+
   },
   image: {
     width: 200,
     height: 200,
     resizeMode: 'cover'
+
+  },
+  text:{
+    padding: 10,
+    backgroundColor: 'skyblue'
+
+  },
+  header:{
+    fontSize: 24,
+    fontWeight: 'bold',
+    padding: 10,
   }
 });
 
