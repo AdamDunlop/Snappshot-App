@@ -56,7 +56,7 @@ class Root extends Component {
                                 }]
                             }]
                         };
-                        return fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAJ1Y0f-8pNPyM2fBth5vLLTtBJCDtNHbw', {
+                        return fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBNTi3d3CX9Roz2XrKg6J2CPQqb-POUhCs', {
                             method: 'POST',
                             headers: {
                                 'Accept': 'application/json',
