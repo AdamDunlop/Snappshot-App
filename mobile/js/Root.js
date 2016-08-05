@@ -35,8 +35,8 @@ class Root extends Component {
     }
 
     componentDidMount() {}
+
     _refreshImage() {
-      super();
       this.setState({
             imageSource: '',
             text: ''
@@ -122,14 +122,10 @@ class Root extends Component {
                   onChangeText={(text) => this.setState({text})}
                   value={this.state.text}
                 />  
-                <TextInput
-                  multiline={false}
-                  onChangeText={(text) 
-                    
-                  }} />
+            
                 <Button
                   style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
-                  onPress={(event) => console.log('refreshing')} => event.this._refreshImage() >
+                  onPress={(event) => console.log('refreshing')} >
                   <Icon name="chevron-right" style={{color: 'skyblue'}} />
                   Refresh
                 </Button>
@@ -137,7 +133,7 @@ class Root extends Component {
                 <Form
                   ref='contactForm'
                   label="Contact Information">
-                  <InputField ref='first_name' placeholder='First Name' }/>
+                  <InputField ref='first_name' placeholder='First Name' />
                   <InputField ref='last_name' placeholder='Last Name' />
                   <InputField ref='email' placeholder='Email' />
                   <InputField ref='address' placeholder='Address' />
