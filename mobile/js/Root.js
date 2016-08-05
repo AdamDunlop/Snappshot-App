@@ -1,13 +1,23 @@
-import React, {
+  import React, {
   AppRegistry,
   Component,
   StyleSheet,
   Text,
   View,
+  ScrollView,
+  StatusBar,  
+  TextInput,
   Image,
   TouchableOpacity,
   CameraRoll
 } from 'react-native';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import { Form, InputField,
+        Separator, SwitchField, LinkField,
+        PickerField, DatePickerField
+      } from 'react-native-form-generator';
 
 var Button = require('react-native-button');
 
@@ -26,7 +36,11 @@ class Root extends Component {
 
     componentDidMount() {}
 
-    _deleteImage() {
+    _refreshImage() {
+      this.setState({
+            imageSource: '',
+            text: ''
+        });
     }
 
     _showImagePicker() {
@@ -86,39 +100,61 @@ class Root extends Component {
     }
 
     render() {
+      var _scrollView: ScrollView;
         return (
+          <ScrollView
+            ref={(scrollView) => { _scrollView = scrollView; }}
+            automaticallyAdjustContentInsets={false}
+            scrollEventThrottle={200}
+            style={styles.scrollView}>
 
             <View style={styles.container}>
-              <Text>Hello!</Text>
-                <Text style={styles.header}>Welcome To SnappShot</Text>
                 {this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
                   <Button
                   style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
                   onPress={this._showImagePicker.bind(this)}>
                   Take a Snapp
                 </Button>
+                <StatusBar barStyle="default" />
 
                 <Text>{'Text read:'}</Text>
-                <Text>{this.state.text}</Text>
-
+                <TextInput style={styles.inputBox}
+                  onChangeText={(text) => this.setState({text})}
+                  value={this.state.text}
+                />  
+            
                 <Button
                   style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
-                  onPress={this._deleteImage()}>
+                  onPress={(event) => console.log('refreshing')} >
+                  <Icon name="chevron-right" style={{color: 'skyblue'}} />
                   Refresh
                 </Button>
+
+                <Form
+                  ref='contactForm'
+                  label="Contact Information">
+                  <InputField ref='first_name' placeholder='First Name' />
+                  <InputField ref='last_name' placeholder='Last Name' />
+                  <InputField ref='email' placeholder='Email' />
+                  <InputField ref='address' placeholder='Address' />
+
+                  <SwitchField label='Adjust Contact information' ref="has_accepted_conditions"
+                    helpText='Please adjust information where needed'/>
+                </Form>
+
             </View>
+          </ScrollView>
+
         );      
   }
 }
-
-
-
 
 export default Root;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: 20,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
@@ -135,10 +171,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'skyblue'
 
   },
-  header:{
-    fontSize: 24,
+  scrollView: {
+    backgroundColor: '#6A85B1',
+    height: 300,
+  },
+  inputBox:{
+    height: 120,
     fontWeight: 'bold',
     padding: 10,
+    borderColor: 'black',
+    borderWidth: 2,
+    margin: 16,
+    paddingLeft: 10 
+
   }
 });
 
@@ -165,3 +210,4 @@ var options = {
     path: 'images' // ios only - will save image at /Documents/images rather than the root
   }
 };
+
