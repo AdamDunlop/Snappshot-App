@@ -5,43 +5,40 @@
   Text,
   View,
   ScrollView,
-  StatusBar,  
+  StatusBar,
   TextInput,
+  MapView,
   Image,
   TouchableOpacity,
   CameraRoll
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-import { Form, InputField,
-        Separator, SwitchField, LinkField,
-        PickerField, DatePickerField
-      } from 'react-native-form-generator';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 var Button = require('react-native-button');
 
 let ImagePickerManager = require('NativeModules').ImagePickerManager;
 
+
 class Root extends Component {
 
-    constructor() {
-        super();
+  constructor() {
+      super();
+      this.state = {
+          imageSource: '',
+          text: ''
+      };
+  }
 
-        this.state = {
-            imageSource: '',
-            text: ''
-        };
-    }
+  componentDidMount() {}
 
-    componentDidMount() {}
-
-    _refreshImage() {
-      this.setState({
-            imageSource: '',
-            text: ''
-        });
-    }
+  clearText() {
+    this.setState({
+        imageSource: '',
+        text: ''
+      });
+  }
 
     _showImagePicker() {
         ImagePickerManager.showImagePicker(options, (response) => {
@@ -99,6 +96,10 @@ class Root extends Component {
         });
     }
 
+               // code to display image 
+               //{this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
+
+
     render() {
       var _scrollView: ScrollView;
         return (
@@ -109,44 +110,39 @@ class Root extends Component {
             style={styles.scrollView}>
 
             <View style={styles.container}>
-                {this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
-                  <Button
+                <Button
                   style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
                   onPress={this._showImagePicker.bind(this)}>
                   Take a Snapp
                 </Button>
-                <StatusBar barStyle="default" />
-
-                <Text>{'Text read:'}</Text>
-                <TextInput style={styles.inputBox}
-                  onChangeText={(text) => this.setState({text})}
+                <TextInput 
+                  style={styles.inputBox}
+                  multiline={true}
+                  controlled={true}
                   value={this.state.text}
                 />  
-            
                 <Button
                   style={{borderRadius: 6, backgroundColor: 'skyblue', padding: 5, margin: 10 }}
-                  onPress={(event) => console.log('refreshing')} >
-                  <Icon name="chevron-right" style={{color: 'skyblue'}} />
+                  onPress={this.clearText.bind(this)} >
                   Refresh
                 </Button>
 
-                <Form
-                  ref='contactForm'
-                  label="Contact Information">
-                  <InputField ref='first_name' placeholder='First Name' />
-                  <InputField ref='last_name' placeholder='Last Name' />
-                  <InputField ref='email' placeholder='Email' />
-                  <InputField ref='address' placeholder='Address' />
-
-                  <SwitchField label='Adjust Contact information' ref="has_accepted_conditions"
-                    helpText='Please adjust information where needed'/>
-                </Form>
-
             </View>
+
+             <View>
+              <MapView
+                style={styles.map}
+                showsUserLocation={true}
+                followUserLocation={true}
+                pitchEnabled={true}
+              />
+            </View>
+
           </ScrollView>
 
         );      
   }
+
 }
 
 export default Root;
@@ -161,10 +157,10 @@ const styles = StyleSheet.create({
 
   },
   image: {
-    width: 200,
-    height: 200,
-    resizeMode: 'cover'
-
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
+    borderRadius: 10,
   },
   text:{
     padding: 10,
@@ -178,13 +174,19 @@ const styles = StyleSheet.create({
   inputBox:{
     height: 120,
     fontWeight: 'bold',
-    padding: 10,
     borderColor: 'black',
     borderWidth: 2,
     margin: 16,
-    paddingLeft: 10 
-
-  }
+    borderColor: '#aaaaaa',
+    padding: 4,
+    borderRadius: 10,
+  },
+  map: {
+    height: 150,
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#000000',
+  },
 });
 
 var options = {
@@ -210,4 +212,3 @@ var options = {
     path: 'images' // ios only - will save image at /Documents/images rather than the root
   }
 };
-
