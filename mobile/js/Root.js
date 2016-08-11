@@ -16,9 +16,14 @@
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import * as Progress from 'react-native-progress';
+
 var Button = require('react-native-button');
 
+var ProgressBar = require('react-native-progress-bar');
+
 let ImagePickerManager = require('NativeModules').ImagePickerManager;
+
 
 
 class Root extends Component {
@@ -27,7 +32,9 @@ class Root extends Component {
       super();
       this.state = {
           imageSource: '',
-          text: ''
+          text: '',
+          progress: 0,
+          sendRequest: false
       };
   }
 
@@ -36,7 +43,8 @@ class Root extends Component {
   clearText() {
     this.setState({
         imageSource: '',
-        text: ''
+        text: '',
+        progress: 0,
       });
   }
 
@@ -71,7 +79,14 @@ class Root extends Component {
                                     "maxResults":1
                                 }]
                             }]
+
+
                         };
+
+                       this.setState({
+                          sendRequest: true
+                       })
+
                         return fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBNTi3d3CX9Roz2XrKg6J2CPQqb-POUhCs', {
                             method: 'POST',
                             headers: {
@@ -80,20 +95,26 @@ class Root extends Component {
                             },
                             body: JSON.stringify(request)
                         })
-                        .then(res => {
-                            return res.json();
-                        })
-                        .then(json => {
-                            console.log('RESPONSE IS: ', json);
-                            this.setState({
-                                text: json.responses[0].textAnnotations[0].description
-                            });
-                        });
+                          .then(res => {
+                              this.setState({
+                                sendRequest: false
+                              });
+                              return res.json();
+                          })
+                          .then(json => {
+                              console.log('RESPONSE IS: ', json);
+                              this.setState({
+                                  text: json.responses[0].textAnnotations[0].description
+                              });
+                          });
+                         
+
                     })
                     .catch(err => console.log(err));
                 // API calls
+
             }
-        });
+        });  
     }
 
                // code to display image 
@@ -102,6 +123,11 @@ class Root extends Component {
 
     render() {
       var _scrollView: ScrollView;
+      
+      setTimeout((function() {
+        this.setState({ progress: this.state.progress + (0.4 * Math.random())});
+      }).bind(this), 1000);
+
         return (
           <ScrollView
             ref={(scrollView) => { _scrollView = scrollView; }}
@@ -115,7 +141,10 @@ class Root extends Component {
                   onPress={this._showImagePicker.bind(this)}>
                   Take a Snapp
                 </Button>
-                <TextInput 
+              
+                {this.state.sendRequest ? <Progress.Circle size={30} indeterminate={true} /> : null }
+
+                <TextInput  
                   style={styles.inputBox}
                   multiline={true}
                   controlled={true}
@@ -126,9 +155,7 @@ class Root extends Component {
                   onPress={this.clearText.bind(this)} >
                   Refresh
                 </Button>
-
             </View>
-
              <View>
               <MapView
                 style={styles.map}
@@ -170,6 +197,9 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: '#6A85B1',
     height: 300,
+  },
+  progressView:{
+    marginTop: 20,
   },
   inputBox:{
     height: 120,
