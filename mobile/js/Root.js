@@ -1,6 +1,6 @@
-  import React, {
+  import React, {Component} from 'react';
+  import {
   AppRegistry,
-  Component,
   StyleSheet,
   Text,
   View,
@@ -13,17 +13,14 @@
   CameraRoll
 } from 'react-native';
 
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import * as Progress from 'react-native-progress';
 
 var Button = require('react-native-button');
 
-var ProgressBar = require('react-native-progress-bar');
-
-let ImagePickerManager = require('NativeModules').ImagePickerManager;
-
+import ImagePicker from 'react-native-image-picker';
+console.log(ImagePicker)
 class Root extends Component {
 
   constructor() {
@@ -31,7 +28,7 @@ class Root extends Component {
       this.state = {
           imageSource: '',
           text: '',
-          progress: 0,
+          // progress: 0,
           sendRequest: false
       };
   }
@@ -42,71 +39,73 @@ class Root extends Component {
     this.setState({
         imageSource: '',
         text: '',
-        progress: 0,
+        // progress: 0,
       });
   }
 
     _showImagePicker() {
-        ImagePickerManager.showImagePicker(options, (response) => {
+        ImagePicker.showImagePicker(options, (response) => {
             console.log('Response = ', response);
 
             if (response.didCancel) {
                 console.log('User cancelled image picker');
             }
             else if (response.error) {
-                console.log('ImagePickerManager Error: ', response.error);
+                console.log('ImagePicker Error: ', response.error);
             }
             else if (response.customButton) {
                 console.log('User tapped custom button: ', response.customButton);
             }
             else {
-                CameraRoll.saveImageWithTag(response.uri)
-                    .then(newUri => {
+                // TODO: Check if the image already exist, if not save it to the camera roll
+                // CameraRoll.saveToCameraRoll(response.uri)
+                //     .then(newUri => {
+                //         this.setState({
+                //             imageSource: {uri: newUri.replace('file://', '')}
+                //         });
+                //     })
+                //     .then(() => {
+                //     })
+                //     .catch(err => console.log(err));
+
+                let request = {
+                    "requests":[{
+                        "image":{
+                            "content": response.data
+                        },
+                        "features":[{
+                            "type":"TEXT_DETECTION",
+                            "maxResults":1
+                        }]
+                    }]
+                };
+
+                this.setState({
+                    sendRequest: true
+                })
+
+                this.clearText();
+
+                return fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBNTi3d3CX9Roz2XrKg6J2CPQqb-POUhCs', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(request)
+                })
+                    .then(res => {
                         this.setState({
-                            imageSource: {uri: newUri.replace('file://', '')}
+                            sendRequest: false
                         });
+                        return res.json();
                     })
-                    .then(() => {
-                        let request = {
-                            "requests":[{
-                                "image":{
-                                    "content": response.data
-                                },
-                                "features":[{
-                                    "type":"TEXT_DETECTION",
-                                    "maxResults":1
-                                }]
-                            }]
-                        };
-
-                       this.setState({
-                          sendRequest: true
-                       })
-
-                        return fetch('https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBNTi3d3CX9Roz2XrKg6J2CPQqb-POUhCs', {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(request)
-                        })
-                          .then(res => {
-                              this.setState({
-                                sendRequest: false
-                              });
-                              return res.json();
-                          })
-                          .then(json => {
-                              console.log('RESPONSE IS: ', json);
-                              this.setState({
-                                  text: json.responses[0].textAnnotations[0].description
-                              });
-                          });
-                         
-
-                    })
-                    .catch(err => console.log(err));
+                    .then(json => {
+                        console.log('RESPONSE IS: ', json);
+                        this.setState({
+                            text: json.responses[0].textAnnotations[0].description
+                        });
+                    });
                 // API calls
             }
         });  
@@ -118,9 +117,9 @@ class Root extends Component {
     render() {
       var _scrollView: ScrollView;
       
-      setTimeout((function() {
-        this.setState({ progress: this.state.progress + (0.4 * Math.random())});
-      }).bind(this), 1000);
+      // setTimeout((function() {
+      //   this.setState({ progress: this.state.progress + (0.4 * Math.random())});
+      // }).bind(this), 1000);
 
         return (
           <ScrollView
@@ -136,7 +135,7 @@ class Root extends Component {
                   Take a Snapp
                 </Button>
               
-                {this.state.sendRequest ? <Progress.Circle size={30} indeterminate={true} /> : null }
+                {this.state.sendRequest ? <Progress.Circle size={30} indeterminate={true} /> : null}
                 {this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
                 <TextInput  
                   style={styles.inputBox}
