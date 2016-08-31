@@ -28,7 +28,6 @@ class Root extends Component {
       this.state = {
           imageSource: '',
           text: '',
-          // progress: 0,
           sendRequest: false
       };
   }
@@ -38,8 +37,7 @@ class Root extends Component {
   clearText() {
     this.setState({
         imageSource: '',
-        text: '',
-        // progress: 0,
+        text: ''
       });
   }
 
@@ -67,7 +65,6 @@ class Root extends Component {
                 //     .then(() => {
                 //     })
                 //     .catch(err => console.log(err));
-
                 let request = {
                     "requests":[{
                         "image":{
@@ -113,13 +110,8 @@ class Root extends Component {
 
                // code to display image 
 
-
     render() {
       var _scrollView: ScrollView;
-      
-      // setTimeout((function() {
-      //   this.setState({ progress: this.state.progress + (0.4 * Math.random())});
-      // }).bind(this), 1000);
 
         return (
           <ScrollView
@@ -162,7 +154,7 @@ class Root extends Component {
           </ScrollView>
 
         );      
-  }
+    }
 
 }
 
