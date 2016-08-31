@@ -24,8 +24,6 @@ var ProgressBar = require('react-native-progress-bar');
 
 let ImagePickerManager = require('NativeModules').ImagePickerManager;
 
-
-
 class Root extends Component {
 
   constructor() {
@@ -79,8 +77,6 @@ class Root extends Component {
                                     "maxResults":1
                                 }]
                             }]
-
-
                         };
 
                        this.setState({
@@ -112,13 +108,11 @@ class Root extends Component {
                     })
                     .catch(err => console.log(err));
                 // API calls
-
             }
         });  
     }
 
                // code to display image 
-               //{this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
 
 
     render() {
@@ -143,10 +137,11 @@ class Root extends Component {
                 </Button>
               
                 {this.state.sendRequest ? <Progress.Circle size={30} indeterminate={true} /> : null }
-
+                {this.state.imageSource ? <Image style={styles.image} source={this.state.imageSource} /> : null}
                 <TextInput  
                   style={styles.inputBox}
                   multiline={true}
+                  onChangeText={(text) => this.setState({text})}
                   controlled={true}
                   value={this.state.text}
                 />  
