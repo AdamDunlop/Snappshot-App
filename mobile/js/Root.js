@@ -24,22 +24,22 @@ console.log(ImagePicker)
 class Root extends Component {
 
   constructor() {
-      super();
-      this.state = {
-          imageSource: '',
-          text: '',
-          sendRequest: false
-      };
+    super();
+    this.state = {
+        imageSource: '',
+        text: '',
+        sendRequest: false
+    };
   }
 
   componentDidMount() {}
 
-  clearText() {
-    this.setState({
-        imageSource: '',
-        text: ''
-      });
-  }
+    clearText() {
+      this.setState({
+          imageSource: '',
+          text: ''
+        });
+    }
 
     _showImagePicker() {
         ImagePicker.showImagePicker(options, (response) => {
@@ -107,9 +107,7 @@ class Root extends Component {
             }
         });  
     }
-
                // code to display image 
-
     render() {
       var _scrollView: ScrollView;
 
